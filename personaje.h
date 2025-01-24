@@ -1,40 +1,37 @@
 #ifndef PERSONAJE_H
 #define PERSONAJE_H
-#include <QObject>
+
 #include <QGraphicsPixmapItem>
-#include <QTimer>
-#include <QPainter>
-#include <QThread>
-#include <string>
-//////////////////
-using namespace std;
-class Personaje
-{
-private:
-    float vida_Personaje;
-    string nombre;
-    //Para generar saltos de tiro parabólico, se busca generar dos velocidades.
-    //Una en X y otra en Y.
-    float posX;      // Posición en el eje X.
-    float posY;      // Posición en el eje Y.
-    float velocidadX; // Velocidad en el eje X.
-    float velocidadY; // Velocidad en el eje Y.
-    bool salto;   // Estado para saber si está saltando.
-    QPixmap *pixmap;
+#include <QObject>
+#include <QString>
+
+class Personaje : public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
+
+protected:
+    unsigned short w, h;    // Ancho y alto del sprite
+    short x_s, y_s;         // Coordenadas del sprite
+    short posx, posy;       // posición del personaje
+    QPixmap *pixmap;        // Pixmap para el sprite
+    bool salto;
+    float v0y; // Velocidad vertical para el salto
+    float gravedad;          // Gravedad que afecta al personaje
 
 public:
-    // Constructor y destructor.
-    Personaje(float vida_, const string& nombre_);
+    Personaje(unsigned short w_, unsigned short h_, short x_s_, short y_s_,short posx_,short posy_, const QString &direccion_, bool salto_);
     ~Personaje();
+    void actualizar_pixmap(const QString &direccion_);
+    void sprite_derecha();
+    void sprite_izquierda();
+    short get_posx();
+    short get_posy();
 
-    // Métodos principales.
-    void mover();
-    void cambio_vida();
-    void saltar();
-    void morir();
-    void actualizarFisica(float deltaTime);
-    //Función amiga, esta buscará que el jugador pueda atacar.
-    friend void atacar(Personaje& atacado);
+
+    //métodos para el salto
+     void saltar();
+    void set_posicion();
+
+    //void sprite_izquierda();
 };
 
 #endif // PERSONAJE_H
