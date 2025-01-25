@@ -1,11 +1,12 @@
 #include "personaje.h"
 
 Personaje::Personaje(unsigned short w_, unsigned short h_, short x_s_, short y_s_,
-                     short posx_, short posy_, const QString &direccion_, bool salto_)
-    : w(w_), h(h_), x_s(x_s_), y_s(y_s_), posx(posx_), posy(posy_), salto(salto_) {
+                     short posx_, short posy_, const QString &direccion_,
+                     bool salto_,unsigned short m_,short vida_,unsigned short fuerza_ataque_)
+    : w(w_), h(h_), x_s(x_s_), y_s(y_s_), posx(posx_), posy(posy_),
+    salto(salto_),m(m_),vida(vida_),fuerza_ataque(fuerza_ataque_) {
     pixmap = new QPixmap(direccion_);
 
-    // Inicializar físicas del salto
     v0y = 0;  // Sin movimiento inicial en el eje Y
     gravedad = 10;         // Gravedad constante que afectará al personaje
 
@@ -81,6 +82,48 @@ void Personaje::set_posicion() {
 
 }
 
+void Personaje::set_fuerza(unsigned short magnitud_fuerza){
+    fuerza_ataque=magnitud_fuerza;
+}
+void Personaje::restar_vida(unsigned short daño){
+    vida-=daño;
+}
+
+
+//Método para el retroceso del golpe.
+void Personaje::retroceso(unsigned short fuerza_golpe, bool golpe_derecha) {
+    // Calcular aceleración inicial usando F = m * a
+    float aceleracion = static_cast<float>(fuerza_golpe) / m; // m es la masa del personaje
+    float friccion = 10.0; // Coeficiente de fricción que reduce la velocidad
+    float velocidad = golpe_derecha ? aceleracion : -aceleracion; // Velocidad inicial basada en la dirección
+    float dt = 0.02; // Tiempo entre actualizaciones (20 ms)
+
+    // Crear un temporizador para animar el retroceso
+    QTimer *temporizadorRetroceso = new QTimer(this);
+
+    connect(temporizadorRetroceso, &QTimer::timeout, this, [=]() mutable {
+        // Reducir la velocidad por la fricción
+        if (velocidad > 0) {
+            velocidad -= friccion * dt;
+            if (velocidad < 0) velocidad = 0; // Detener el movimiento hacia la derecha
+        } else if (velocidad < 0) {
+            velocidad += friccion * dt;
+            if (velocidad > 0) velocidad = 0; // Detener el movimiento hacia la izquierda
+        }
+
+        // Actualizar la posición del personaje
+        setX(x() + velocidad * dt);
+
+        // Detener el temporizador si la velocidad es 0
+        if (velocidad == 0) {
+            temporizadorRetroceso->stop();
+            temporizadorRetroceso->deleteLater(); // Liberar memoria del temporizador
+        }
+    });
+
+    // Iniciar el temporizador para actualizar cada 20 ms
+    temporizadorRetroceso->start(20);
+}
 
 
 
