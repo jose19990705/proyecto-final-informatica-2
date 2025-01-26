@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Crear el personaje y añadirlo a la escena
-    Homero = new Personaje(100, 100, 0, 0, 30, 350, ":/imagenes/caminar_sin_fondo.png", false);
+    Homero = new Personaje(100, 100, 0, 0, 30, 350, ":/imagenes/caminar_sin_fondo.png", false,20,100,5);
     escena->addItem(Homero);
 
     // Ajustar posición inicial del personaje

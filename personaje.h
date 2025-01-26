@@ -4,7 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QObject>
 #include <QString>
-
+#include <QTimer>
 class Personaje : public QObject, public QGraphicsPixmapItem {
     Q_OBJECT
 

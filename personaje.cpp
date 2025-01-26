@@ -93,10 +93,10 @@ void Personaje::restar_vida(unsigned short daño){
 //Método para el retroceso del golpe.
 void Personaje::retroceso(unsigned short fuerza_golpe, bool golpe_derecha) {
     // Calcular aceleración inicial usando F = m * a
-    float aceleracion = static_cast<float>(fuerza_golpe) / m; // m es la masa del personaje
+    float aceleracion = static_cast<float>(fuerza_golpe/ m) ; // m es la masa del personaje
     float friccion = 10.0; // Coeficiente de fricción que reduce la velocidad
     float velocidad = golpe_derecha ? aceleracion : -aceleracion; // Velocidad inicial basada en la dirección
-    float dt = 0.02; // Tiempo entre actualizaciones (20 ms)
+    float dt = 0.1; //Delta de tiempo para los eventos de la fuerza. Se debe aún revisar sus efectos.
 
     // Crear un temporizador para animar el retroceso
     QTimer *temporizadorRetroceso = new QTimer(this);
@@ -121,7 +121,7 @@ void Personaje::retroceso(unsigned short fuerza_golpe, bool golpe_derecha) {
         }
     });
 
-    // Iniciar el temporizador para actualizar cada 20 ms
+    // Iniciar el temporizador para actualizar cada 20 ms. De esta manera se controla el movimiento del retroceso.
     temporizadorRetroceso->start(20);
 }
 
