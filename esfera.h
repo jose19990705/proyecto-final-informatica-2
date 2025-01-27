@@ -1,25 +1,27 @@
 #ifndef ESFERA_H
 #define ESFERA_H
-#include <QPixmap>
-//clase de la esfera del poder.
-class esfera
+#include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QString>
+#include <QTimer>
+class esfera: public QObject, public QGraphicsPixmapItem
 {
-private:
-    float carga_electrica;
-    float radio;
-    float masa;
-    float *arreglo_velocidades;
-    QPixmap *pixmap_esfera;
+protected:
+    short carga_electrica;
+    unsigned short w_esfera,h_esfera; //esta estará en Ucoumlomb
+    QPixmap *pixmap;
+    QTimer *bola_sprite;
+
+    //short posx, posy;
+
 
 public:
-    esfera(float carga_electrica_, float radio_, float masa_,float *arreglo_velocidades_);
+    esfera(short carga_electrica_, unsigned short w_esfera_,
+           unsigned short h_esfera_, const QString &direccion_,
+           short pos_x_jugador, short pos_y_jugador);
+
+    void aceleracion(short pos_x_jugador,short pos_y_jugador,short carga_jugador);
     ~esfera();
-    float get_carga_electrica();
-    float *get_velocidades();
-    unsigned short get_radio();
-    unsigned short get_masa();
-    void set_velocidad(float carga_homero, float* distancia,
-                               unsigned int *tiempo);
 };
 
 #endif // ESFERA_H
