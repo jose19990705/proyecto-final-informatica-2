@@ -35,10 +35,10 @@ void Personaje::sprite_izquierda(){
 }
 
 short Personaje::get_posx(){
-    return posx;
+    return posx=x();
 }
 short Personaje::get_posy(){
-    return posy;
+    return posy=y();
 }
 
 

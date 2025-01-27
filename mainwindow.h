@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "personaje.h"
+#include "heroe.h"
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QKeyEvent>
@@ -28,7 +28,7 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene *escena;  // Escena para contener los elementos gráficos
     QTimer *temporizador;
-    Personaje *Homero;       // Personaje principal
+    Heroe *Homero;       // Personaje principal
 private:
     QSet<int> teclasPresionadas; // Para rastrear teclas activas
     QTimer *temporizadorMovimiento; // Para manejar el movimiento continuo

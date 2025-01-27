@@ -26,8 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
     temporizadorMovimiento->start(16); // Actualizar 60 veces por segundo (~16 ms)
 
 
-    // Crear el personaje y añadirlo a la escena
-    Homero = new Personaje(100, 100, 0, 0, 30, 350, ":/imagenes/caminar_sin_fondo.png", false,20,100,5);
+    // Creacción del personaje principal (Homero)
+    Homero=new Heroe(100,100,0,0,30,350, ":/imagenes/caminar_sin_fondo.png",false,20,100,5);
+
     escena->addItem(Homero);
 
     // Ajustar posición inicial del personaje
