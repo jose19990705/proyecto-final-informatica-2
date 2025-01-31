@@ -29,6 +29,8 @@ private:
     QGraphicsScene *escena;  // Escena para contener los elementos gráficos
     QTimer *temporizador;
     Heroe *Homero;       // Personaje principal
+
+
 private:
     QSet<int> teclasPresionadas; // Para rastrear teclas activas
     QTimer *temporizadorMovimiento; // Para manejar el movimiento continuo

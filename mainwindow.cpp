@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     // Creacción del personaje principal (Homero)
-    Homero=new Heroe(100,100,0,0,30,350, ":/imagenes/caminar_sin_fondo.png",false,20,100,5);
+    Homero=new Heroe(100,100,0,0,30,350, ":/imagenes/caminar_sin_fondo.png",false,20,100,5,escena);
 
     escena->addItem(Homero);
 
@@ -50,12 +50,19 @@ MainWindow::~MainWindow() {
 }
 void MainWindow::keyPressEvent(QKeyEvent *i) {
     teclasPresionadas.insert(i->key()); // Agregar la tecla presionada al conjunto
+
+    if(i->key()==Qt::Key_F){
+        Homero->activar_Poder();
+    }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *i) {
     teclasPresionadas.remove(i->key()); // Eliminar la tecla soltada del conjunto
-}
 
+    if (i->key() == Qt::Key_F) { // Si se suelta la tecla "F"
+        Homero->desactivar_Poder(); // Desactivar el poder del héroe
+    }
+}
 
 
 

@@ -2,12 +2,13 @@
 
 Heroe::Heroe(unsigned short w_, unsigned short h_, short x_s_, short y_s_,
              short posx_, short posy_, const QString &direccion_,
-             bool salto_, unsigned short m_, short vida_, unsigned short fuerza_ataque_)
+             bool salto_, unsigned short m_, short vida_, unsigned short fuerza_ataque_,QGraphicsScene *escena_)
     : Personaje(w_, h_, x_s_, y_s_, posx_, posy_, direccion_, salto_, m_, vida_, fuerza_ataque_) {
-    bola_poder=new esfera(1,10,10,"://imagenes/bola_sin_fondo.png",posx_,posy_);
+    bola_poder=new esfera(2,10,10,"://imagenes/bola_sin_fondo.png",posx_,posy_);
     carga_electrica=-1;
     temporizadorPoder= new QTimer(this);
     poderActivado=false;
+    escena_-> addItem(bola_poder);
 }
 
 void Heroe::activar_Poder(){
@@ -27,10 +28,10 @@ void Heroe::habilidad_especial() {
     connect(temporizadorPoder, &QTimer::timeout, this, [=]() {
         bola_poder->aceleracion(x(), y(), carga_electrica);
     });
-    temporizadorPoder->start(20); // se actualizará cada 20 ms el timer.
 }
 
 Heroe::~Heroe(){
     delete bola_poder;
     delete temporizadorPoder;
 }
+
