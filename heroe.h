@@ -13,12 +13,20 @@ class Heroe: public Personaje
 private:
     esfera *bola_poder;
     short carga_electrica;
+    QTimer *temporizadorPoder;
+    bool poderActivado;
+
+
 public:
     Heroe(unsigned short w_, unsigned short h_, short x_s_, short y_s_,
           short posx_, short posy_, const QString &direccion_, bool salto_,
           unsigned short m_, short vida_, unsigned short fuerza_ataque_);
     ~Heroe();
+    //métodos para la habilidad especial
     void habilidad_especial();
+    void activar_Poder();
+    void desactivar_Poder();
+
 };
 
 #endif // HEROE_H
