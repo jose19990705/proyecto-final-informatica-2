@@ -13,8 +13,9 @@ protected:
     short carga_electrica;
     unsigned short w_esfera, h_esfera; // Tamaño de la esfera
     QPixmap pixmap; // Imagen de la esfera
-    QTimer *bola_sprite; // Temporizador para animaciones (opcional)
+    QTimer *bola_sprite;
     float vx,vy;
+    bool disparo; // Esta variable booleana será para conocer si ya se encuentra disponible o no el disparo.
 
 public:
     esfera(short carga_electrica_, unsigned short w_esfera_,
@@ -22,6 +23,9 @@ public:
            short pos_x_jugador, short pos_y_jugador);
 
     void aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_jugador);
+    void disparar_esfera();
+    void setVisible(bool visible);
+
     ~esfera();
 };
 

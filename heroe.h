@@ -9,12 +9,13 @@
 
 class Heroe: public Personaje
 {
-
+    Q_OBJECT
 private:
     esfera *bola_poder;
     short carga_electrica;
     QTimer *temporizadorPoder;
-    bool poderActivado;
+    bool poderActivado,mover;
+    QGraphicsScene *escena_p;
 
 
 public:
@@ -26,7 +27,9 @@ public:
     void habilidad_especial();
     void activar_Poder();
     void desactivar_Poder();
-
+    int get_posx();
+    int get_posy();
+    bool get_moverse();
 };
 
 #endif // HEROE_H

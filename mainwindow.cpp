@@ -51,22 +51,26 @@ MainWindow::~MainWindow() {
 void MainWindow::keyPressEvent(QKeyEvent *i) {
     teclasPresionadas.insert(i->key()); // Agregar la tecla presionada al conjunto
 
-    if(i->key()==Qt::Key_F){
-        Homero->activar_Poder();
+    if (i->key() == Qt::Key_F) {
+        Homero->activar_Poder(); // Activar el poder con la tecla F
+    }
+    else if (i->key() == Qt::Key_G) {
+        Homero->desactivar_Poder(); // Desactivar el poder con la tecla G
     }
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *i) {
     teclasPresionadas.remove(i->key()); // Eliminar la tecla soltada del conjunto
 
-    if (i->key() == Qt::Key_F) { // Si se suelta la tecla "F"
-        Homero->desactivar_Poder(); // Desactivar el poder del héroe
-    }
+    // No desactivamos el poder al soltar la tecla F
 }
 
 
 
 void MainWindow::actualizarMovimiento() {
+    if (!Homero->get_moverse()) {
+        return; // No mover al jugador si el poder está activo
+    }
     if (teclasPresionadas.contains(Qt::Key_D)) {
         Homero->setX(Homero->x() + 10);
         Homero->actualizar_pixmap(":/imagenes/caminar_sin_fondo.png");
@@ -83,6 +87,5 @@ void MainWindow::actualizarMovimiento() {
         Homero->saltar();
     }
 }
-
 
 
