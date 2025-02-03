@@ -4,8 +4,9 @@
 
 esfera::esfera(short carga_electrica_, unsigned short w_esfera_,
                unsigned short h_esfera_, const QString &direccion_,
-               short pos_x_jugador, short pos_y_jugador)
-    : carga_electrica(carga_electrica_), w_esfera(w_esfera_), h_esfera(h_esfera_) {
+               short pos_x_jugador, short pos_y_jugador,unsigned short fuerza_ataque_, unsigned short masa_esfera_)
+    : carga_electrica(carga_electrica_), w_esfera(w_esfera_), h_esfera(h_esfera_),
+    fuerza_ataque(fuerza_ataque_), masa_esfera(masa_esfera_) {
     // Cargar y escalar la imagen de la esfera
     pixmap = QPixmap(direccion_);
     setPixmap(pixmap.scaled(w_esfera, h_esfera));
@@ -23,6 +24,11 @@ esfera::esfera(short carga_electrica_, unsigned short w_esfera_,
     // Establecer la posición inicial de la esfera
     setPos(pos_x_jugador + 350, pos_y_jugador);
 }
+
+unsigned short esfera::get_fuerzaDeAataque(){
+    return fuerza_ataque;
+}
+
 
 void esfera::disparar_esfera(){
     disparo=true;
@@ -64,9 +70,12 @@ void esfera::aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_j
     float Fy = k * carga_electrica * carga_jugador * deltaY / distanciaCuadrada;
 
     // Actualiza la velocidad acumulativa
-    vx += Fx * factorEscala;
-    vy += Fy * factorEscala;
-
+   // vx += Fx * factorEscala;
+   // vy += Fy * factorEscala;
+    float ax=Fx/masa_esfera;
+    float ay=Fy/masa_esfera;
+    vx+= ax*factorEscala;
+    vy+= ay*factorEscala;
     // Limita la velocidad máxima
     if (vx > velocidadMaxima) vx = velocidadMaxima;
     else if (vx < -velocidadMaxima) vx = -velocidadMaxima;
