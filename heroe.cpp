@@ -18,7 +18,7 @@ void Heroe::activar_Poder() {
         mover = false; // Bloquear el movimiento del jugador
 
         // Crear la esfera solo cuando se activa el poder
-        bola_poder = new esfera(2, 10, 10, "://imagenes/bola_sin_fondo.png", this->x(), this->y(),10,2);
+        bola_poder = new esfera(3, 10, 10, "://imagenes/bola_sin_fondo.png", this->x(), this->y(),10,2);
         bola_poder->setVisible(true); // Hacer visible la esfera
         escena_p->addItem(bola_poder); // Añadir la esfera a la escena
 

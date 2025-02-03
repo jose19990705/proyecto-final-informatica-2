@@ -47,7 +47,7 @@ void esfera::aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_j
     }
 
     const unsigned short k = 90; // Constante de Coulomb
-    const float velocidadMaxima = 5.0f; // Reducir la velocidad máxima para mayor suavidad
+    const float velocidadMaxima = 20.0f; // Reducir la velocidad máxima para mayor suavidad
     const float factorEscala = 0.01f; // Factor de escala para la fuerza
     const float distanciaMinima = 10; // Aumentar la distancia mínima para evitar oscilaciones
 
