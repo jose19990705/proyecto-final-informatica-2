@@ -1,25 +1,34 @@
 #ifndef ESFERA_H
 #define ESFERA_H
-#include <QPixmap>
-//clase de la esfera del poder.
-class esfera
-{
-private:
-    float carga_electrica;
-    float radio;
-    float masa;
-    float *arreglo_velocidades;
-    QPixmap *pixmap_esfera;
+
+#include <QObject>
+#include <QGraphicsPixmapItem>
+#include <QString>
+#include <QTimer>
+
+class esfera : public QObject, public QGraphicsPixmapItem {
+    Q_OBJECT
+
+protected:
+    short carga_electrica;
+    unsigned short w_esfera, h_esfera; // Tamaño de la esfera
+    QPixmap pixmap; // Imagen de la esfera
+    QTimer *bola_sprite;
+    float vx,vy;
+    bool disparo; // Esta variable booleana será para conocer si ya se encuentra disponible o no el disparo.
+    unsigned short fuerza_ataque;
+    unsigned short masa_esfera;
 
 public:
-    esfera(float carga_electrica_, float radio_, float masa_,float *arreglo_velocidades_);
+    esfera(short carga_electrica_, unsigned short w_esfera_,
+           unsigned short h_esfera_, const QString &direccion_,
+           short pos_x_jugador, short pos_y_jugador,unsigned short fuerza_ataque_,unsigned short masa_esfera_);
+
+    void aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_jugador);
+    void disparar_esfera();
+    void setVisible(bool visible);
+    unsigned short get_fuerzaDeAataque();
     ~esfera();
-    float get_carga_electrica();
-    float *get_velocidades();
-    unsigned short get_radio();
-    unsigned short get_masa();
-    void set_velocidad(float carga_homero, float* distancia,
-                               unsigned int *tiempo);
 };
 
 #endif // ESFERA_H
