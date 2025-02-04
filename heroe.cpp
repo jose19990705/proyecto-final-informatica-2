@@ -1,9 +1,9 @@
 #include "heroe.h"
 
-Heroe::Heroe(unsigned short w_, unsigned short h_, short x_s_, short y_s_,
-             short posx_, short posy_, const QString &direccion_, bool salto_,
-             unsigned short m_, short vida_, unsigned short fuerza_ataque_, QGraphicsScene *escena_)
-    : Personaje(w_, h_, x_s_, y_s_, posx_, posy_, direccion_, salto_, m_, vida_, fuerza_ataque_) {
+Heroe::Heroe(unsigned short wSprite_, unsigned short hSprite_, short x_sprite_, short y_sprite_, short posx_, short posy_, const QString &direccion_,
+             bool salto_, short vida_, unsigned short velocidadX_, unsigned short wPersonaje, unsigned short hPersonaje, QGraphicsScene *escena_)
+    : Personaje (wSprite_, hSprite_, x_sprite_, y_sprite_, posx_, posy_, direccion_, salto_, vida_, velocidadX_, wPersonaje, hPersonaje) {
+
     bola_poder = nullptr; // Inicialmente, no hay esfera
     carga_electrica = -1;
     temporizadorPoder = new QTimer(this);
@@ -51,9 +51,6 @@ bool Heroe::get_moverse()  {
 }
 Heroe::~Heroe(){
     delete bola_poder;
-
     delete temporizadorPoder;
-
     delete escena_p;
-
 }
