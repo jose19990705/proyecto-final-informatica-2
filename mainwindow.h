@@ -50,6 +50,7 @@ private slots:
     void seleccionarNivel2();
     void seleccionarlogros();
     void menu();
+    void volver_menu();
 
 
 public:

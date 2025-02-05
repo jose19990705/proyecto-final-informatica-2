@@ -16,11 +16,13 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Error: Alguno de los botones (nivel1, nivel2, nivel3) es nullptr.";
         return;
     }
+    ui->menu_principal->hide();
     ui->label_poder->hide();
     ui->numero_poder->hide();
     connect(ui->nivel1, &QPushButton::clicked, this, &MainWindow::seleccionarNivel1);
     connect(ui->nivel2, &QPushButton::clicked, this, &MainWindow::seleccionarNivel2);
     connect(ui->nivel3, &QPushButton::clicked, this, &MainWindow::seleccionarlogros);
+    connect(ui->menu_principal,&QPushButton::clicked,this,&MainWindow::volver_menu);
 
 
     sin_daño=true;
@@ -87,6 +89,8 @@ MainWindow::MainWindow(QWidget *parent)
     poner_logro();
 
 */
+    verificar_logros();
+    poner_logro();
 }
 
 
@@ -270,7 +274,35 @@ void MainWindow::menu() {
     }
 
 }
+
+void MainWindow::volver_menu(){
+    QPixmap fondoMenu(R"(://imagenes/fondo_menu.jpg)");
+    if (!fondoMenu.isNull()) {
+        QGraphicsPixmapItem* fondoItem = escena->addPixmap(fondoMenu);
+        fondoItem->setPos(0, 0);  // Posicionar el fondo en la esquina superior izquierda
+        // Asegurarse de que el fondo esté detrás de todos los demás elementos
+        fondoItem->setZValue(-1);
+    } else {
+        qDebug() << "Error: No se pudo cargar la imagen de fondo del menú.";
+    }
+    escena->removeItem(Homero);
+
+    for (Villano* villano : villanosEscenario1) {
+        if (villano) {
+            escena->removeItem(villano);
+            //delete villano;
+        }
+    }
+
+
+    ui->nivel1->show();
+    ui->nivel2->show();
+    ui->nivel3->show();
+}
 void MainWindow::seleccionarNivel1() {
+
+
+
     opcion = 1;
     qDebug()<<"entro a 1";
     menu(); // Llama a la función que inicia el juego con la opción seleccionada
@@ -280,8 +312,18 @@ void MainWindow::seleccionarNivel1() {
     ui->label_poder->show();
     ui->numero_poder->show();
     ui->numero_poder->display(Homero->get_cant_habilidad());
+    ui->menu_principal->show();
+    //////////////////////////////////////////////////////////////////
 
-
+    QPixmap fondoMenu(R"(://imagenes/fondo_juego_1.png)");
+    if (!fondoMenu.isNull()) {
+        QGraphicsPixmapItem* fondoItem = escena->addPixmap(fondoMenu);
+        fondoItem->setPos(0, 0);  // Posicionar el fondo en la esquina superior izquierda
+        // Asegurarse de que el fondo esté detrás de todos los demás elementos
+        fondoItem->setZValue(-1);
+    } else {
+        qDebug() << "Error: No se pudo cargar la imagen de fondo del menú.";
+    }
 
 }
 
@@ -294,6 +336,8 @@ void MainWindow::seleccionarNivel2() {
      ui->nivel3->hide();
      ui->label_poder->show();
      ui->numero_poder->show();
+     ui->menu_principal->show();
+
 }
 
 void MainWindow::seleccionarlogros() {
@@ -303,4 +347,8 @@ void MainWindow::seleccionarlogros() {
      ui->nivel1->hide();
      ui->nivel2->hide();
      ui->nivel3->hide();
+     ui->menu_principal->show();
+     this->imprimir_logros();
 }
+
+
