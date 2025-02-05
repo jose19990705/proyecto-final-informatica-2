@@ -45,6 +45,13 @@ private:
     QTimer *temporizador_logros;
 
 
+private slots:
+    void seleccionarNivel1();
+    void seleccionarNivel2();
+    void seleccionarlogros();
+    void menu();
+
+
 public:
     void verificar_logros();
     void logros();

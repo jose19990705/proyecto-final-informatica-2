@@ -24,6 +24,45 @@
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="nivel1">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>130</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nivel 1</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="nivel2">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>220</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>nivel 2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="nivel3">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>310</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Logros</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
