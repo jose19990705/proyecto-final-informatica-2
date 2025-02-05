@@ -11,10 +11,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     this->resize(1280, 720);    // Redimensionamos el tamaño del mainWindow
     //atributos para los logros obtenidos.
+
+    if (!ui->nivel1 || !ui->nivel2 || !ui->nivel3) {
+        qDebug() << "Error: Alguno de los botones (nivel1, nivel2, nivel3) es nullptr.";
+        return;
+    }
+    ui->label_poder->hide();
+    ui->numero_poder->hide();
     connect(ui->nivel1, &QPushButton::clicked, this, &MainWindow::seleccionarNivel1);
     connect(ui->nivel2, &QPushButton::clicked, this, &MainWindow::seleccionarNivel2);
     connect(ui->nivel3, &QPushButton::clicked, this, &MainWindow::seleccionarlogros);
-
 
 
     sin_daño=true;
@@ -28,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
     escena->setSceneRect(0, 0, ui->escenario->width() - 5, ui->escenario->height() - 5); // Ajustar los bordes de la escena
 
     ui->escenario->setScene(escena);
-
     //Fondo menú
 
     QPixmap fondoMenu(R"(://imagenes/fondo_menu.jpg)");
@@ -40,20 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
     } else {
         qDebug() << "Error: No se pudo cargar la imagen de fondo del menú.";
     }
-
-// aca debe de ir con el widget, este le dará el valor a opcion!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   // opcion=0;
-
-//Temporizador para verificar los logros.
-    connect(temporizador_logros, &QTimer::timeout, this, &MainWindow::verificar_logros);
-    temporizador_logros->start(20);
-
-
-   // opciones para el menú de juego
-    //-------------------------------------------------------------------------------------------------------------
-
-
-
+    Homero=new Heroe(100,100,0,0,30,350, ":/imagenes/caminar_sin_fondo.png",false,100,10,70,70,escena,2);
 
     temporizador= new QTimer;
     connect(temporizador, &QTimer::timeout, this, [=]() {
@@ -67,19 +59,68 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+    //Temporizador para verificar los logros.
+    connect(temporizador_logros, &QTimer::timeout, this, &MainWindow::verificar_logros);
+    temporizador_logros->start(20);
+
+
+
+ /*
+
+
+
+
+
+
+
+   // opciones para el menú de juego
+    //-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
     verificar_logros();
     poner_logro();
-  //  ~MainWindow();
+
+*/
 }
 
+
+
+
+
 MainWindow::~MainWindow() {
-    delete Homero;
+    qDebug() << "Cerrando ventana y liberando memoria...";
+
+    if (Homero) {
+        escena->removeItem(Homero);
+
+    }
+
+    if (Burns) {
+        escena->removeItem(Burns);
+        delete Burns;
+        Burns = nullptr;
+    }
+
+    for (Villano* villano : villanosEscenario1) {
+        if (villano) {
+            escena->removeItem(villano);
+            delete villano;
+        }
+    }
+    villanosEscenario1.clear();
+
     delete escena;
     delete temporizador;
     delete temporizadorMovimiento;
-    delete Burns;
     delete temporizador_logros;
-    delete ui;
+
+    delete ui;  // Esto elimina todo el UI
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *i) {
@@ -87,6 +128,11 @@ void MainWindow::keyPressEvent(QKeyEvent *i) {
 
     if (i->key() == Qt::Key_F) {
         Homero->activar_Poder(); // Activar el poder con la tecla F
+        if(Homero->get_cant_habilidad()>=0){
+            ui->numero_poder->display(Homero->get_cant_habilidad());
+
+
+        }
     }
     else if (i->key() == Qt::Key_G) {
         Homero->desactivar_Poder(); // Desactivar el poder con la tecla G
@@ -184,75 +230,9 @@ void MainWindow::imprimir_logros() {
 }
 
 
-/*
-void MainWindow::menu(){
-    switch (opcion) {
-    case 1:
-        // Creacción del personaje principal (Homero)
-        Homero = new Heroe(64, 64, 0, 0, 30, 350, R"(://imagenes/Sprite sheet derecha proyecto final info 2.png)",
-                           false, 100, 10, 80, 80, escena,2);
-        escena->addItem(Homero);
 
-        // Creamos punteros de villanos y los agregamos a un QList, y los ponemos en el escenario
-        for (int i = 0; i < 6; ++i) {
-            QPoint coordenadasVillano = Villano::generarVillanosEscenario1(Homero->x());
-            // Ancho y alto del sprite, coordenadas dentro de la hoja de sprite, posición en el escenario, dirección en memoria del sprite, estado de salto, vida, velocidad horizontal, ancho y alto del personaje en el escenario
+void MainWindow::menu() {
 
-            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 2, 80, 80);
-            villanosEscenario1.append(nuevoVillano);
-            escena->addItem(nuevoVillano);
-        }
-        Burns=nullptr;
-        break;
-    case 2:
-        Homero = new Heroe(64, 64, 0, 0, 30, 350, R"(://imagenes/Sprite sheet derecha proyecto final info 2.png)",
-                           false, 100, 10, 80, 80, escena,5);
-        for (int i = 0; i < 6; ++i) {
-            QPoint coordenadasVillano = Villano::generarVillanosEscenario1(Homero->x());
-            // Ancho y alto del sprite, coordenadas dentro de la hoja de sprite, posición en el escenario, dirección en memoria del sprite, estado de salto, vida, velocidad horizontal, ancho y alto del personaje en el escenario
-
-            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 2, 80, 80);
-            villanosEscenario1.append(nuevoVillano);
-            escena->addItem(nuevoVillano);
-        }
-        //--------------------------acá se inicializarán los atributos de burns.-------------------------------------------------------------------------
-        Burns= nullptr;
-        break;
-
-
-
-    case 3:
-        this->imprimir_logros();
-        break;
-    default:
-        break;
-    }
-
-}
-*/
-
-void MainWindow::menu(){
-    // Liberar memoria de Homero y Burns antes de asignar nuevos valores
-    if (Homero) {
-        escena->removeItem(Homero);
-        delete Homero;
-        Homero = nullptr;
-    }
-
-    if (Burns) {
-        escena->removeItem(Burns);
-        delete Burns;
-        Burns = nullptr;
-    }
-
-    // Liberar memoria de los villanos
-    for (Villano* villano : villanosEscenario1) {
-        escena->removeItem(villano);
-        delete villano;
-    }
-    villanosEscenario1.clear(); // Vaciar la lista
-
-    // Ahora creamos nuevos objetos según el nivel
     switch (opcion) {
     case 1:
         Homero = new Heroe(64, 64, 0, 0, 30, 350, R"(://imagenes/Sprite sheet derecha proyecto final info 2.png)",
@@ -288,20 +268,39 @@ void MainWindow::menu(){
     default:
         break;
     }
+
 }
-
-
 void MainWindow::seleccionarNivel1() {
     opcion = 1;
+    qDebug()<<"entro a 1";
     menu(); // Llama a la función que inicia el juego con la opción seleccionada
+    ui->nivel1->hide();
+    ui->nivel2->hide();
+    ui->nivel3->hide();
+    ui->label_poder->show();
+    ui->numero_poder->show();
+    ui->numero_poder->display(Homero->get_cant_habilidad());
+
+
+
 }
 
 void MainWindow::seleccionarNivel2() {
     opcion = 2;
+     qDebug()<<"entro a 2";
     menu(); // Llama a la función que inicia el juego con la opción seleccionada
+     ui->nivel1->hide();
+     ui->nivel2->hide();
+     ui->nivel3->hide();
+     ui->label_poder->show();
+     ui->numero_poder->show();
 }
 
 void MainWindow::seleccionarlogros() {
     opcion = 3;
+     qDebug()<<"entro a 3";
     menu(); // Llama a la función que inicia el juego con la opción seleccionada
+     ui->nivel1->hide();
+     ui->nivel2->hide();
+     ui->nivel3->hide();
 }
