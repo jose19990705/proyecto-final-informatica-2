@@ -86,6 +86,19 @@
      <string>Cantidad de poderes</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="menu_principal">
+    <property name="geometry">
+     <rect>
+      <x>1130</x>
+      <y>10</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>menu</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
