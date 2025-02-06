@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>imagenes/caminar_sin_fondo.png</file>
+        <file>imagenes/salto_sin_fondo.png</file>
+        <file>imagenes/caminar_izq_sin_fondo.png</file>
+        <file>imagenes/bola_sin_fondo.png</file>
+        <file>imagenes/Sprite sheet derecha proyecto final info 2.png</file>
+        <file>imagenes/Sprite sheet izquierda proyecto final info 2.png</file>
+        <file>imagenes/rata_sin_fondo.png</file>
+        <file>imagenes/fondo_menu.jpg</file>
+        <file>imagenes/fondo_juego_1.png</file>
+        <file>imagenes/Bullet.png</file>
+    </qresource>
+</RCC>

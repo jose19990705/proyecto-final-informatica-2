@@ -44,6 +44,8 @@ public:
 
     //Métodos para el ataque y lo relacionado a la vida.
     void restar_vida(unsigned short daño);
+    // Métodos para el ataque y lo relacionado a la vida.
+    int get_vida();
 };
 
 #endif // PERSONAJE_H
