@@ -1,6 +1,6 @@
 #ifndef ESFERA_H
 #define ESFERA_H
-
+#include <QGraphicsScene>
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QString>
@@ -29,6 +29,8 @@ public:
     void setVisible(bool visible);
     unsigned short get_fuerzaDeAataque();
     ~esfera();
+
 };
+
 
 #endif // ESFERA_H

@@ -1,3 +1,9 @@
+
+
+
+
+
+//----------------------------------------------------
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -23,11 +29,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->nivel2, &QPushButton::clicked, this, &MainWindow::seleccionarNivel2);
     connect(ui->nivel3, &QPushButton::clicked, this, &MainWindow::seleccionarlogros);
     connect(ui->menu_principal,&QPushButton::clicked,this,&MainWindow::volver_menu);
+//----------------------------------------------------------------------------------
+    temporizadorMovimiento = new QTimer(this);
+    connect(temporizadorMovimiento, &QTimer::timeout, this, &MainWindow::actualizarMovimiento);
+    temporizadorMovimiento->start(16); // Actualizar 60 veces por segundo (~16 ms)
 
+    // Creamos el temporizador para la inmunidad
+    temporizadorInmunidad = new QTimer(this);
+    connect(temporizadorInmunidad, &QTimer::timeout, this, [&]() {
+        if (Homero) {
+            Homero->desactivar_inmunidad();
+            inmunidadActiva = false;
+        }
+    });
+
+//--------------------------------------------------------------------------------
 
     sin_daño=true;
     sin_poder=true;
-
+    //colision= new QTimer(this);
     temporizador_logros= new QTimer();
     // Crear la escena
     escena = new QGraphicsScene(this);
@@ -48,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << "Error: No se pudo cargar la imagen de fondo del menú.";
     }
     Homero=new Heroe(100,100,0,0,30,350, ":/imagenes/caminar_sin_fondo.png",false,100,10,70,70,escena,2);
+
+
 
     temporizador= new QTimer;
     connect(temporizador, &QTimer::timeout, this, [=]() {
@@ -123,6 +145,7 @@ MainWindow::~MainWindow() {
     delete temporizador;
     delete temporizadorMovimiento;
     delete temporizador_logros;
+    delete temporizadorInmunidad;
 
     delete ui;  // Esto elimina todo el UI
 }
@@ -141,13 +164,28 @@ void MainWindow::keyPressEvent(QKeyEvent *i) {
     else if (i->key() == Qt::Key_G) {
         Homero->desactivar_Poder(); // Desactivar el poder con la tecla G
     }
+    else if (i->key() == Qt::Key_S && !disparando && Proyectil::proyectiles_lanzados < 2) {
+        disparando = true;
+        if (Homero->get_direccion() == true) {
+            Proyectil* proyectil = new Proyectil(Homero->x(), Homero->y(), 10, true, Homero->get_direccion()); // El proyectil se lanza a la derecha
+            escena->addItem(proyectil);
+        } else {
+            Proyectil* proyectil = new Proyectil(Homero->x(), Homero->y(), -10, true, Homero->get_direccion()); // El proyectil se lanza a la izquierda
+            escena->addItem(proyectil);
+        }
+    }
+
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *i) {
     teclasPresionadas.remove(i->key()); // Eliminar la tecla soltada del conjunto
+    if (i->key() == Qt::Key_S) {
+        disparando = false;  // Permitir disparar nuevamente cuando se suelta la tecla
+    }
 
     // No desactivamos el poder al soltar la tecla F
 }
+
 
 void MainWindow::actualizarMovimiento() {
     if (!Homero->get_moverse()) {
@@ -156,22 +194,37 @@ void MainWindow::actualizarMovimiento() {
     if (teclasPresionadas.contains(Qt::Key_D)) {
         Homero->setX(Homero->x() + 10);
         Homero->actualizar_sprite(R"(://imagenes/Sprite sheet derecha proyecto final info 2.png)");
+        Homero->avanza();
         QThread::msleep(10);
         Homero->sprite_derecha(512, 64);
     }
     if (teclasPresionadas.contains(Qt::Key_A)) {
         Homero->setX(Homero->x() - 10);
         Homero->actualizar_sprite(R"(://imagenes/Sprite sheet izquierda proyecto final info 2.png)");
+        Homero->retrocede();
         QThread::msleep(10);
         Homero->sprite_izquierda(192, 64);
     }
     if (teclasPresionadas.contains(Qt::Key_Space)) {
         Homero->saltar();
     }
+    for (auto item : escena->items()) {
+        Proyectil* proyectil = dynamic_cast<Proyectil*>(item);
+        if (proyectil) {
+            proyectil->mover();  // Llamamos al método mover de cada proyectil
+            // Verificamos si el proyectil ha salido de la escena o ha impactado con un personaje
+            if (proyectil->estaFueraDeLaEscena() || proyectil->impactaPersonaje()) {
+                escena->removeItem(proyectil);
+                delete proyectil;
+            }
+        }
+    }
     for (auto villano : villanosEscenario1) {
         villano->movimiento_villano(Homero->x());
     }
 }
+
+
 //----------------------------------------------------------------
 void MainWindow::verificar_logros(){
     if(Homero->get_estado_poder()){
@@ -245,7 +298,7 @@ void MainWindow::menu() {
 
         for (int i = 0; i < 6; ++i) {
             QPoint coordenadasVillano = Villano::generarVillanosEscenario1(Homero->x());
-            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 2, 80, 80);
+            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 1, 80, 80);
             villanosEscenario1.append(nuevoVillano);
             escena->addItem(nuevoVillano);
         }
@@ -259,7 +312,7 @@ void MainWindow::menu() {
 
         for (int i = 0; i < 6; ++i) {
             QPoint coordenadasVillano = Villano::generarVillanosEscenario1(Homero->x());
-            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 2, 80, 80);
+            Villano* nuevoVillano = new Villano(64,64,208,2433, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/Sprite sheet izquierda proyecto final info 2.png)", false, 10, 8, 80, 80);
             villanosEscenario1.append(nuevoVillano);
             escena->addItem(nuevoVillano);
         }
@@ -298,6 +351,8 @@ void MainWindow::volver_menu(){
     ui->nivel1->show();
     ui->nivel2->show();
     ui->nivel3->show();
+    ui->label_poder->hide();
+    ui->numero_poder->hide();
 }
 void MainWindow::seleccionarNivel1() {
 
@@ -337,6 +392,8 @@ void MainWindow::seleccionarNivel2() {
      ui->label_poder->show();
      ui->numero_poder->show();
      ui->menu_principal->show();
+     ui->numero_poder->display(Homero->get_cant_habilidad());
+     ui->menu_principal->show();
 
 }
 
@@ -351,4 +408,25 @@ void MainWindow::seleccionarlogros() {
      this->imprimir_logros();
 }
 
+// Método para verificar las colisiones entre el héroe y los villanos
+void MainWindow::verificarColisionesHeroeVillanos(Heroe* heroe){
+    if (!heroe) return;  // Comprobar que el puntero no sea nulo
+    if (inmunidadActiva) return;  // Para no crear varios temporizadores
 
+    // Obtenemos los elementos que colisionan con el héroe
+    QList<QGraphicsItem*> colisiones = heroe->collidingItems();
+
+    // Verificamos si el héroe ha colisionado con algún villano
+    for (auto& item : colisiones) {
+        Villano* villano = dynamic_cast <Villano*> (item);  // Intentamos convertir el objeto colisionante en villano
+        if (villano) {
+            heroe->activar_inmunidad();
+            heroe->restar_vida(2);
+            //qDebug() << "Vida del personaje: " <<
+            inmunidadActiva = true;
+
+            // Iniciar el temporizador de inmunidad, lo cual desactivará la inmunidad después de 1 segundo
+            temporizadorInmunidad->start(1000);  // 1 segundo
+        }
+    }
+}

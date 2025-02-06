@@ -1,3 +1,4 @@
+
 #include "esfera.h"
 #include <QDebug>
 #include <cmath>
@@ -39,6 +40,8 @@ void esfera::disparar_esfera(){
 
 
 
+
+
 void esfera::aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_jugador) {
     if (disparo) {
         // Si está en modo disparo, mover la esfera hacia la derecha
@@ -70,8 +73,8 @@ void esfera::aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_j
     float Fy = k * carga_electrica * carga_jugador * deltaY / distanciaCuadrada;
 
     // Actualiza la velocidad acumulativa
-   // vx += Fx * factorEscala;
-   // vy += Fy * factorEscala;
+    // vx += Fx * factorEscala;
+    // vy += Fy * factorEscala;
     float ax=Fx/masa_esfera;
     float ay=Fy/masa_esfera;
     vx+= ax*factorEscala;
@@ -85,9 +88,9 @@ void esfera::aceleracion(short pos_x_jugador, short pos_y_jugador, short carga_j
     // Movimiento de la esfera según la aceleración
     setX(x() + vx);
     setY(y() + vy);
-    qDebug() << "Posición del héroe:" << pos_x_jugador << pos_y_jugador;
-    qDebug() << "Posición de la esfera:" << x() << y();
-    qDebug() << "Velocidad de la esfera:" << vx << vy;
+//    qDebug() << "Posición del héroe:" << pos_x_jugador << pos_y_jugador;
+  //  qDebug() << "Posición de la esfera:" << x() << y();
+//    qDebug() << "Velocidad de la esfera:" << vx << vy;
 
 }
 
@@ -100,7 +103,6 @@ void esfera::setVisible(bool visible) {
 
 
 esfera::~esfera() {
-    delete bola_sprite;
+    bola_sprite->stop(); // Detén el temporizador antes de la eliminación del objeto
 }
-
 
