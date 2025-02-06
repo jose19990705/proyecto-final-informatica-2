@@ -84,3 +84,6 @@ void Personaje::set_posicion() {
 void Personaje::restar_vida(unsigned short danio){
     vida -= danio;
 }
+int Personaje::get_vida(){
+    return vida;
+}

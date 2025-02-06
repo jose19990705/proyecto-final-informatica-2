@@ -298,7 +298,7 @@ void MainWindow::menu() {
 
         for (int i = 0; i < 6; ++i) {
             QPoint coordenadasVillano = Villano::generarVillanosEscenario1(Homero->x());
-            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 1, 80, 80);
+            Villano* nuevoVillano = new Villano(100, 100, 0, 0, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/rata_sin_fondo.png)", false, 10, 1, 80, 80,10);
             villanosEscenario1.append(nuevoVillano);
             escena->addItem(nuevoVillano);
         }
@@ -312,7 +312,7 @@ void MainWindow::menu() {
 
         for (int i = 0; i < 6; ++i) {
             QPoint coordenadasVillano = Villano::generarVillanosEscenario1(Homero->x());
-            Villano* nuevoVillano = new Villano(64,64,208,2433, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/Sprite sheet izquierda proyecto final info 2.png)", false, 10, 8, 80, 80);
+            Villano* nuevoVillano = new Villano(64,64,208,2433, coordenadasVillano.x(), coordenadasVillano.y(), R"(://imagenes/Sprite sheet izquierda proyecto final info 2.png)", false, 10, 8, 80, 80,10);
             villanosEscenario1.append(nuevoVillano);
             escena->addItem(nuevoVillano);
         }
@@ -421,7 +421,14 @@ void MainWindow::verificarColisionesHeroeVillanos(Heroe* heroe){
         Villano* villano = dynamic_cast <Villano*> (item);  // Intentamos convertir el objeto colisionante en villano
         if (villano) {
             heroe->activar_inmunidad();
-            heroe->restar_vida(2);
+            heroe->restar_vida(villano->get_danio());
+            if (heroe->get_vida() <= 0){
+                escena->removeItem(heroe);
+                delete heroe;
+                qDebug() << "Homero muere";     // --------> Aqui muere, llamar a Menu
+                this->volver_menu();
+            }
+
             //qDebug() << "Vida del personaje: " <<
             inmunidadActiva = true;
 
